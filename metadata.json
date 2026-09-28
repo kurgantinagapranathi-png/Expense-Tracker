@@ -1,0 +1,6 @@
+{
+  "name": "FinanceFlow Expense Tracker",
+  "description": "Modern personal expense tracker and budget management dashboard with interactive charts, multi-currency support, and offline persistence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
