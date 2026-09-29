@@ -12,6 +12,9 @@ import {
   Info,
   ShieldCheck,
   FileSpreadsheet,
+  Bot,
+  Sparkles,
+  Zap,
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { CURRENCIES } from '../utils/constants';
@@ -36,6 +39,47 @@ export const SettingsView: React.FC = () => {
   const [showClearModal, setShowClearModal] = useState(false);
   const [showResetDemoModal, setShowResetDemoModal] = useState(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  const DEFAULT_WEBHOOK_URL =
+    'https://pranathi2007.app.n8n.cloud/webhook/fd742814-53d4-47f0-9351-77128c49fd9a/chat:';
+  const [webhookUrl, setWebhookUrl] = useState(() => {
+    try {
+      const stored = localStorage.getItem('financeflow_n8n_webhook_url_v1');
+      if (!stored || stored === 'https://pranathi2007.app.n8n.cloud/webhook/fd742814-53d4-47f0-9351-77128c49fd9a/chat') {
+        localStorage.setItem('financeflow_n8n_webhook_url_v1', DEFAULT_WEBHOOK_URL);
+        return DEFAULT_WEBHOOK_URL;
+      }
+      return stored;
+    } catch {
+      return DEFAULT_WEBHOOK_URL;
+    }
+  });
+
+  const handleSaveWebhook = (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      localStorage.setItem('financeflow_n8n_webhook_url_v1', webhookUrl.trim());
+      showToast('n8n Webhook URL updated successfully!');
+    } catch {
+      // ignore
+    }
+  };
+
+  const handleToggleWebhookMode = () => {
+    let next = webhookUrl;
+    if (webhookUrl.includes('/webhook/')) {
+      next = webhookUrl.replace('/webhook/', '/webhook-test/');
+    } else if (webhookUrl.includes('/webhook-test/')) {
+      next = webhookUrl.replace('/webhook-test/', '/webhook/');
+    }
+    setWebhookUrl(next);
+    try {
+      localStorage.setItem('financeflow_n8n_webhook_url_v1', next);
+      showToast(`Switched to ${next.includes('/webhook-test/') ? 'Test' : 'Production'} Webhook URL`);
+    } catch {
+      // ignore
+    }
+  };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -221,6 +265,71 @@ export const SettingsView: React.FC = () => {
             <span className="text-xs text-neutral-900 dark:text-neutral-100">System Sync</span>
           </button>
         </div>
+      </div>
+
+      {/* n8n AI Chatbot Integration Card */}
+      <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 shadow-xs space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-neutral-100 dark:border-neutral-800">
+          <div className="flex items-center gap-2.5">
+            <div className="p-1.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-amber-500">
+              <Bot className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+                <span>n8n Chatbot Integration</span>
+                <span
+                  className={`text-[9px] font-mono px-1.5 py-0.5 rounded-sm uppercase tracking-wide font-medium ${
+                    webhookUrl.includes('/webhook-test/')
+                      ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400'
+                      : 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+                  }`}
+                >
+                  {webhookUrl.includes('/webhook-test/') ? 'Test Webhook' : 'Production Active'}
+                </span>
+              </h2>
+              <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                Connected to your n8n workflow webhook for natural language expense queries and assistance
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleToggleWebhookMode}
+            className="px-2.5 py-1 text-xs font-medium text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 rounded-lg transition-colors whitespace-nowrap"
+          >
+            Toggle to {webhookUrl.includes('/webhook-test/') ? 'Production' : 'Test Mode'}
+          </button>
+        </div>
+
+        <form onSubmit={handleSaveWebhook} className="space-y-3">
+          <div>
+            <label className="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+              n8n Chat Webhook URL
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={webhookUrl}
+                onChange={(e) => setWebhookUrl(e.target.value)}
+                placeholder="https://...app.n8n.cloud/webhook/.../chat"
+                className="flex-1 px-3 py-2 text-xs font-mono bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 rounded-lg focus:outline-hidden focus:ring-1 focus:ring-neutral-900 dark:focus:ring-neutral-100"
+              />
+              <button
+                type="submit"
+                className="px-4 py-2 text-xs font-semibold text-white bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 rounded-lg hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors whitespace-nowrap shadow-xs"
+              >
+                Save URL
+              </button>
+            </div>
+          </div>
+
+          <div className="p-3 bg-neutral-50 dark:bg-neutral-950/60 rounded-lg border border-neutral-200/80 dark:border-neutral-800/80 text-[11px] text-neutral-500 dark:text-neutral-400 space-y-1">
+            <p>
+              💡 <strong>Tip for n8n Cloud:</strong> When running tests in n8n's editor canvas, use the test webhook URL (<code className="font-mono text-neutral-700 dark:text-neutral-300">/webhook-test/</code>). For live production use, ensure the workflow is toggled <strong>Active (ON)</strong> in n8n Cloud.
+            </p>
+          </div>
+        </form>
       </div>
 
       {/* Data Management & Export Section */}

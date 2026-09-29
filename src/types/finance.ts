@@ -40,4 +40,4 @@ export interface BudgetConfig {
   monthlyLimit: number;
 }
 
-export type ViewTab = 'dashboard' | 'transactions' | 'add' | 'analytics' | 'budget' | 'settings';
+export type ViewTab = 'dashboard' | 'transactions' | 'add' | 'analytics' | 'budget' | 'chat' | 'settings';

@@ -11,6 +11,7 @@ import {
   Sun,
   X,
   CreditCard,
+  Sparkles,
 } from 'lucide-react';
 import { ViewTab } from '../types/finance';
 import { useFinance } from '../context/FinanceContext';
@@ -35,6 +36,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'add', label: 'Add Transaction', icon: PlusCircle },
   { id: 'analytics', label: 'Analytics', icon: PieChart },
   { id: 'budget', label: 'Budget', icon: Target },
+  { id: 'chat', label: 'n8n AI Chat', icon: Sparkles },
   { id: 'settings', label: 'Settings', icon: Settings },
 ];
 

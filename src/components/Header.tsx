@@ -16,6 +16,7 @@ const TAB_TITLES: Record<ViewTab, string> = {
   add: 'New Transaction',
   analytics: 'Visual Analytics',
   budget: 'Monthly Budget',
+  chat: 'n8n AI Assistant',
   settings: 'Settings & Data',
 };
 

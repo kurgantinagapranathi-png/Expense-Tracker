@@ -9,7 +9,9 @@ import { AddTransactionView } from './components/AddTransactionView';
 import { AnalyticsView } from './components/AnalyticsView';
 import { BudgetView } from './components/BudgetView';
 import { SettingsView } from './components/SettingsView';
+import { N8nChatView } from './components/N8nChatView';
 import { AddTransactionModal } from './components/AddTransactionModal';
+import { N8nChatbot } from './components/N8nChatbot';
 
 function AppContent() {
   const [currentTab, setCurrentTab] = useState<ViewTab>('dashboard');
@@ -54,6 +56,8 @@ function AppContent() {
 
           {currentTab === 'budget' && <BudgetView />}
 
+          {currentTab === 'chat' && <N8nChatView />}
+
           {currentTab === 'settings' && <SettingsView />}
         </main>
       </div>
@@ -63,6 +67,9 @@ function AppContent() {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
       />
+
+      {/* Floating n8n AI Chatbot Widget */}
+      <N8nChatbot />
     </div>
   );
 }
